@@ -14,10 +14,9 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 
 # Change the npm version to fix ci issues
-RUN npm install --global npm@11.0.0
-
-# Install project dependencies using npm ci (ensures a clean, reproducible install)
-RUN --mount=type=cache,target=/root/.npm npm ci
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --global npm@11.0.0 \
+    npm ci
 
 # Copy the rest of the application source code into the container
 COPY . .
