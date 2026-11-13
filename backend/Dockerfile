@@ -25,14 +25,9 @@ COPY . .
 
 RUN poetry install 
 
-# Set up the database with the necessary tables
-#RUN poetry run bash ./prestart.sh
-
-# RUN --mount=type=secret,id=app_env,required=true \
-#     set -a && . /run/secrets/app_env && \
-#     poetry run bash ./prestart.sh
-
 # Run the backend server
-#CMD ["poetry", "run", "uvicorn", "app.main:app", "--reload"]
 
-CMD ["sh", "-c", "poetry run bash ./prestart.sh && exec poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+CMD [ \
+"sh", "-c", "poetry run bash ./prestart.sh && \
+ exec poetry run uvicorn app.main:app --host 0.0.0.0 \
+ --port 8000"]
