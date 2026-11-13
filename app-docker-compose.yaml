@@ -52,8 +52,8 @@ services:
       - npm_letsencrypt:/etc/letsencrypt
 
 volumes:
-  - npm_data
-  - npm_letsencrypt
+   npm_data:
+   npm_letsencrypt:
 
 
 networks: 
