@@ -13,10 +13,10 @@ WORKDIR /app
 # Copy package-related files first to leverage Docker's caching mechanism
 COPY package.json package-lock.json* ./
 
-# Change the npm version to fix ci issues
+# Change the npm version to fix npm ci issues
 RUN --mount=type=cache,target=/root/.npm \
-    npm install --global npm@11.0.0 \
-    npm ci
+    npm install --global npm@11.0.0 && \
+    npm ci --include=dev
 
 # Copy the rest of the application source code into the container
 COPY . .
