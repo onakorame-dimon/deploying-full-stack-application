@@ -1,0 +1,60 @@
+name: application-stack
+
+services: 
+  frontend:
+    build:
+      context: ./frontend
+      tags: 
+        - frontend:latest
+    env_file: ./frontend/.env
+    ports:
+      - 8080:8080 
+    networks: 
+      - shared-network
+
+  backend:
+    pull_policy: build
+    build: 
+      context: ./backend
+      secrets: 
+        - app_env
+      tags: 
+        - backend:latest
+    env_file: ./backend/.env 
+
+    networks: 
+      - shared-network
+    depends_on: 
+      - db 
+   
+  db: 
+    image: postgres:18-alpine3.24
+    networks: 
+      - shared-network
+    env_file: ./backend/.env
+
+  db_manager:
+    image: adminer:5
+    networks: 
+      - shared-network
+    ports:
+      - 8081:8080 
+
+# TODO: Replace with traefik
+  proxy_manager: 
+    image: jc21/nginx-proxy-manager:latest
+    networks: 
+      - shared-network
+    ports: 
+      - 80:80
+      - 443:443
+      - 81:81 
+
+secrets:
+  app_env:
+    file: ./backend/.env
+
+networks: 
+  shared-network:
+    external: true
+    name: shared-network
