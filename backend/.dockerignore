@@ -1,0 +1,46 @@
+# --- Poetry & Virtual Environments ---
+# Ignore local virtual environments (Poetry often creates these in ~/.cache/pypoetry 
+# or in the project root if virtualenvs.in-project is true)
+.venv/
+venv/
+ENV/
+.poetry/
+
+# --- Python Cache & Bytecode ---
+**/__pycache__/
+**/*.py[cod]
+**/*.so
+**/*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+
+# --- Environment & Configuration Secrets ---
+.env
+*.local
+secrets.*
+.python-version
+
+# --- Testing & Code Quality ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+htmlcov/
+coverage.xml
+
+# --- IDEs & System Files ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Docker & CI/CD ---
+.git/
+docker-compose*.yml
+Dockerfile*
+.dockerignore
