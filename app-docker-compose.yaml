@@ -16,8 +16,6 @@ services:
     pull_policy: build
     build: 
       context: ./backend
-      secrets: 
-        - app_env
       tags: 
         - backend:latest
     env_file: ./backend/.env 
@@ -52,10 +50,6 @@ services:
     volumes:
       - npm_data:/data
       - npm_letsencrypt:/etc/letsencrypt
-
-secrets:
-  app_env:
-    file: ./backend/.env
 
 volumes:
   - npm_data
