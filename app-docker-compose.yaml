@@ -6,9 +6,8 @@ services:
       context: ./frontend
       tags: 
         - frontend:latest
-    env_file: ./frontend/.env
-    ports:
-      - 8080:8080 
+    env_file: ./frontend/.env 
+       
     networks: 
       - shared-network
 
@@ -34,9 +33,7 @@ services:
   db_manager:
     image: adminer:5
     networks: 
-      - shared-network
-    ports:
-      - 8081:8080 
+      - shared-network 
 
 # TODO: Replace with traefik
   proxy_manager: 
