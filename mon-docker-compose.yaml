@@ -1,0 +1,50 @@
+name: monitoring-stack
+
+services: 
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yaml
+      - --web.external-url=https://jerrylabs.com/prometheus/
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+    networks: 
+      - shared-network
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest   
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - shared-network
+
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    environment:
+       GF_SERVER_ROOT_URL: http://jerrylabs.com/grafana
+       GF_SERVER_SERVE_FROM_SUB_PATH: true
+
+    ports:
+      - '3000:3000'
+    networks:
+      - shared-network
+    volumes: 
+      - grafana_storage:/var/lib/grafana
+
+volumes: 
+  grafana_storage: 
+
+networks: 
+  shared-network:
+    external: true
+    name: shared-network
