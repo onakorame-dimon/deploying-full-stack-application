@@ -10,22 +10,11 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yaml
       - --web.external-url=https://jerrylabs.com/prometheus/
+      - --web.enable-remote-write-receiver
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
     networks: 
       - shared-network
-
-  cadvisor:
-    container_name: cadvisor
-    image: gcr.io/cadvisor/cadvisor:latest   
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    networks:
-      - shared-network
-
 
   grafana:
     container_name: grafana
@@ -33,13 +22,35 @@ services:
     environment:
        GF_SERVER_ROOT_URL: http://jerrylabs.com/grafana
        GF_SERVER_SERVE_FROM_SUB_PATH: true
-
     ports:
       - '3000:3000'
     networks:
       - shared-network
     volumes: 
       - grafana_storage:/var/lib/grafana
+
+  alloy:
+   image: grafana/alloy
+   privileged: true
+   ports:
+     - 12345:12345
+
+   volumes:
+      - ./config.alloy:/etc/alloy/config.alloy
+      - /proc:/rootproc:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /sys:/sys:ro
+      - /:/rootfs:ro
+      - /dev/disk/:/dev/disk:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+   command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+
+  loki:
+    image: grafana/loki
+    volumes:
+     - ./loki-config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+
 
 volumes: 
   grafana_storage: 
